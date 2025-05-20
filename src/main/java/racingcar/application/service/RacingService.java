@@ -40,7 +40,11 @@ public class RacingService {
 
     private int setRound() {
         racePort.sendMessage(MessageConstants.RACE_ROUND_QUESTION);
-        return getGamePropertyUseCase.getTurnCount();
+        int round = getGamePropertyUseCase.getTurnCount();
+        if (round < 0) {
+            throw new IllegalArgumentException("Negative value is not allowed");
+        }
+        return round;
     }
 
     private void execute(Race race, int round) {
