@@ -9,8 +9,12 @@ import java.util.stream.Stream;
 import racingcar.application.domain.dto.CarDto;
 
 public class Race {
-    final List<Car> cars;
-    final Supplier<Boolean> movementSupplier;
+    private final List<Car> cars;
+    private final Supplier<Boolean> movementSupplier;
+
+    private final String SPLIT_DELIMITER = ",";
+    private final int MAX_NAME_LENGTH = 5;
+    private final int CAR_MOVEMENT_AMOUNT = 1;
 
     public Race(String carNames, Supplier<Boolean> movementSupplier) {
         cars = splitName(carNames).map(Car::new).toList();
@@ -20,7 +24,7 @@ public class Race {
     private Stream<String> splitName(String line) {
         Set<String> nameSet = new HashSet<>();
 
-        return Arrays.stream(line.split(","))
+        return Arrays.stream(line.split(SPLIT_DELIMITER))
                 .peek(name -> {
                     validateNameLength(name);
                     if (!nameSet.add(name)) {
@@ -30,7 +34,7 @@ public class Race {
     }
 
     private void validateNameLength(String name) {
-        if (name.isEmpty() || name.length() > 5) {
+        if (name.isEmpty() || name.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException(String.format("Invalid Name Length - %s, %d", name, name.length()));
         }
     }
@@ -42,7 +46,7 @@ public class Race {
     public void play() {
         cars.forEach(car -> {
             if (movementSupplier.get()) {
-                car.addDistance(1);
+                car.addDistance(CAR_MOVEMENT_AMOUNT);
             }
         });
     }

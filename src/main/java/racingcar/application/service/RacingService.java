@@ -12,6 +12,10 @@ public class RacingService {
     private final GetRandomUseCase getRandomUseCase;
     private final RacePort racePort;
 
+    private final int MIN_RANDOM_VALUE = 0;
+    private final int MAX_RANDOM_VALUE = 9;
+    private final int THRESHOLD_VALUE = 4;
+
     public RacingService(GetGamePropertyUseCase getGamePropertyUseCase,
                          GetRandomUseCase getRandomUseCase, RacePort racePort) {
         this.getGamePropertyUseCase = getGamePropertyUseCase;
@@ -31,7 +35,7 @@ public class RacingService {
     private Race setRace() {
         racePort.sendMessage(MessageConstants.RACE_CAR_NAME_QUESTION);
         return new Race(getGamePropertyUseCase.getParticipantName(),
-                () -> getRandomUseCase.getRandomInRange(0, 9) >= 4);
+                () -> getRandomUseCase.getRandomInRange(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE) >= THRESHOLD_VALUE);
     }
 
     private int setRound() {
